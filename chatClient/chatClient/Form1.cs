@@ -23,26 +23,36 @@ namespace chatClient
         private string _serverHost;
         private int _serverPort;
 
-        public Form1()
+        public Form1(Socket socket, Thread thread)
         {
             InitializeComponent();
             Printer = new printer(print);
             Cleaner = new cleaner(clearChat);
             exitChat.Enabled = false;
+
+            _serverSocket = socket;
+            connect();
         }
 
         private void listner()
         {
-            while (_serverSocket.Connected)
+            try
             {
-                byte[] buffer = new byte[8196];
-                int bytesRec = _serverSocket.Receive(buffer);
-                string data = Encoding.UTF8.GetString(buffer, 0, bytesRec);
-                if (data.Contains("#updatechat"))
+                while (_serverSocket.Connected)
                 {
-                    UpdateChat(data);
-                    continue;
+                    byte[] buffer = new byte[8196];
+                    int bytesRec = _serverSocket.Receive(buffer);
+                    string data = Encoding.UTF8.GetString(buffer, 0, bytesRec);
+                    if (data.Contains("#updatechat"))
+                    {
+                        UpdateChat(data);
+                        continue;
+                    }
                 }
+            }
+            catch
+            {
+                print("Связь с сервером потеряна!");
             }
         }
 
@@ -57,10 +67,10 @@ namespace chatClient
 
                 IPAddress ipAddress = IPAddress.Parse(_serverHost);
                 IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, _serverPort);
-                _serverSocket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                _serverSocket.Connect(ipEndPoint);
-
-                _clientThread = new Thread(listner);
+                //_serverSocket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                //_serverSocket.Connect(ipEndPoint);
+                //_clientThread = thread;
+                _clientThread = new Thread(this.listner);
                 _clientThread.IsBackground = true;
                 _clientThread.Start();
             }
@@ -145,7 +155,7 @@ namespace chatClient
         {
             string Name = userName.Text;
 
-            connect();
+            //connect();
 
             chatBox.Enabled = true;
             chat_msg.Enabled = true;

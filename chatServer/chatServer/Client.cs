@@ -13,6 +13,8 @@ namespace chatServer
         private Socket _handler;
         private Thread _userThread;
 
+        public Client() { }
+
         public Client(Socket socket)
         {
             _handler = socket;
@@ -35,9 +37,13 @@ namespace chatServer
                     byte[] buffer = new byte[1024];
                     int bytesRec = _handler.Receive(buffer);
                     string data = Encoding.UTF8.GetString(buffer, 0, bytesRec);
-                    handleCommand(data);
+
+                    handleCommand(data, this);
                 }
-                catch { ServerFunctions.EndClient(this); return; }
+                catch
+                { 
+                    ServerFunctions.EndClient(this); return; 
+                }
             }
         }
 
@@ -55,7 +61,7 @@ namespace chatServer
             catch (Exception exp) { Console.WriteLine("Error with end: {0}.", exp.Message); }
         }
 
-        private void handleCommand(string data)
+        private void handleCommand(string data, Client client)
         {
             if (data.Contains("#setname"))
             {
@@ -68,6 +74,24 @@ namespace chatServer
                 string message = data.Split('&')[1];
                 ChatController.AddMessage(_userName, message);
                 return;
+            }
+            if (data.Contains("#Registration"))
+            {
+                Registration obj = new Registration();
+                string answer = obj.Register(data.Split('&')[1]);
+
+                _handler.Send(Encoding.UTF8.GetBytes(answer));
+            }
+            if(data.Contains("#Login"))
+            {
+                Login obj = new Login();
+                string answer = obj.Log(data.Split('&')[1]);
+
+                int count = answer.Count(c => c == ' ');
+                if (count == 3)
+                    _userName = answer.Split(' ')[3];
+
+                _handler.Send(Encoding.UTF8.GetBytes(answer));
             }
         }
 
