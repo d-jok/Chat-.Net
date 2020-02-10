@@ -59,6 +59,25 @@ namespace chatServer
 
         static void Main(string[] args)
         {
+<<<<<<< Updated upstream
+=======
+            Server obj = new Server();
+
+            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            try
+            {
+                // Открываем подключение
+                connection.Open();
+                Console.WriteLine("Подключение к базе данных открыто");
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+>>>>>>> Stashed changes
             _serverThread = new Thread(StartServer);
             _serverThread.IsBackground = true;
             _serverThread.Start();

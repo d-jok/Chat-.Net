@@ -10,6 +10,8 @@ namespace chatServer
     class Client
     {
         private string _userName;
+        private string _email;
+        private string _phone;
         private Socket _handler;
         private Thread _userThread;
 
@@ -69,6 +71,43 @@ namespace chatServer
                 ChatController.AddMessage(_userName, message);
                 return;
             }
+<<<<<<< Updated upstream
+=======
+            if (data.Contains("#Registration"))
+            {
+                Registration obj = new Registration();
+                string answer = obj.Register(data.Split('&')[1]);
+
+                _handler.Send(Encoding.UTF8.GetBytes(answer));
+            }
+            if(data.Contains("#Login"))
+            {
+                Login obj = new Login();
+                string answer = obj.Log(data.Split('&')[1]);
+
+                if (answer.Contains("Success"))
+                {
+                    _email = answer.Split(' ')[1];
+                    _userName = answer.Split(' ')[3];
+                    _phone = answer.Split(' ')[4];
+                }
+
+                _handler.Send(Encoding.UTF8.GetBytes(answer));
+            }
+            if(data.Contains("#Search"))
+            {
+                Search obj = new Search();
+                string answer = obj.FindUser(data.Split('&')[1]);
+                Console.WriteLine(data.Split('&')[1]);
+
+                if (answer != null)
+                    _handler.Send(Encoding.UTF8.GetBytes(answer));
+            }
+            if(data.Contains("#Backup"))
+            {
+                Console.WriteLine("Backup " + data.Split(' ')[1]);
+            }
+>>>>>>> Stashed changes
         }
 
         public void UpdateChat()

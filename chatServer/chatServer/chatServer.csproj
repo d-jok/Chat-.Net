@@ -44,6 +44,11 @@
     <Compile Include="ChatController.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+<<<<<<< Updated upstream
+=======
+    <Compile Include="Registration.cs" />
+    <Compile Include="Search.cs" />
+>>>>>>> Stashed changes
     <Compile Include="Server.cs" />
     <Compile Include="ServerFunctions.cs" />
   </ItemGroup>
