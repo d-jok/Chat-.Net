@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using chatClient.User;
 
 namespace chatClient.Models
 {
     [Serializable]
-    class ListOfUsers
+    class ListOfUsers : Info
     {
         public int ListNumber;
-        public string Name;
-        public string Surname;
-        public string NickName;
-        public string Email;
-        public string Phone;
+        //Name, Surname, ... were HERE!!!
         public List<Models.Message> messages;
+        public bool NewMsg;
         public DateTime DataOfChange;
 
+        public ListOfUsers() { }
+
         public ListOfUsers(int number, string name, string sur, string nick, 
-            string email, string phone, List<Models.Message> messages, DateTime data)
+            string email, string phone, List<Models.Message> messages, bool newMsg, DateTime data)
         {
             ListNumber = number;
             Name = name;
@@ -25,9 +25,8 @@ namespace chatClient.Models
             Email = email;
             Phone = phone;
             this.messages = messages;
+            this.NewMsg = newMsg;
             DataOfChange = data;
         }
-
-        public ListOfUsers() { }
     }
 }

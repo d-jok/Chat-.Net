@@ -20,7 +20,7 @@ namespace chatClient
 
         public Connection()
         {
-            _serverHost = "192.168.0.101";
+            _serverHost = "192.168.1.3";
             _serverPort = 9933;
         }
 

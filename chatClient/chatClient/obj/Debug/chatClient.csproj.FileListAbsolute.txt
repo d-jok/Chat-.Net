@@ -7,3 +7,47 @@ D:\Програмы\Project Chat\chatClient\chatClient\obj\Debug\chatClient.cspr
 D:\Програмы\Project Chat\chatClient\chatClient\obj\Debug\chatClient.csproj.CoreCompileInputs.cache
 D:\Програмы\Project Chat\chatClient\chatClient\obj\Debug\chatClient.exe
 D:\Програмы\Project Chat\chatClient\chatClient\obj\Debug\chatClient.pdb
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\chatClient.exe
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\chatClient.pdb
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.csprojAssemblyReference.cache
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.Form1.resources
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.Properties.Resources.resources
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.csproj.GenerateResource.cache
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.csproj.CoreCompileInputs.cache
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.exe
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.pdb
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.Registration.resources
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.Login.resources
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\Newtonsoft.Json.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\Newtonsoft.Json.xml
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.csproj.CopyComplete
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\chatClient.exe.config
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\BouncyCastle.Crypto.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\Microsoft.Threading.Tasks.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\Microsoft.Threading.Tasks.Extensions.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.Net.Http.Extensions.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.Net.Http.Primitives.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\Zlib.Portable.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\BouncyCastle.Crypto.pdb
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\Microsoft.Threading.Tasks.xml
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\Microsoft.Threading.Tasks.Extensions.xml
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.Net.Http.Extensions.xml
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.Net.Http.Primitives.xml
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\Zlib.Portable.xml
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\Microsoft.Speech.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\Interop.SpeechLib.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.csproj.ResolveComReference.cache
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.IO.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.Net.Http.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.Net.Http.WebRequest.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.Runtime.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.Threading.Tasks.dll
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.IO.xml
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.Net.Http.xml
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.Net.Http.WebRequest.xml
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.Runtime.xml
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.Threading.Tasks.xml
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.Search.resources
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.Settings.resources

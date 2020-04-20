@@ -14,6 +14,11 @@ using System.Threading;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using chatClient.SaveAndLoad;
+using chatClient.Models;
+using chatClient.Assistant;
+using System.Text.RegularExpressions;
+using Microsoft.Speech.Recognition;
 
 namespace chatClient
 {
@@ -26,54 +31,113 @@ namespace chatClient
         cleaner Cleaner;
         private Socket _serverSocket;
         private Thread _clientThread;
-        private string _serverHost;
-        private int _serverPort;
+        private Recognizer recognizer;
 
-<<<<<<< Updated upstream
-        public Form1()
-=======
-        private List<Models.ListOfUsers> _listOfUsers;
+        private User.Info User; //CURENT user
+        private FileCheck _fileCheck;
+        private List<ListOfUsers> _listOfUsers;
+        private bool _checkNew;
+        private string _settingsPath;
         private string _usersPath;
+        private string _fileOfChats;
+        public string ChatListShow;
 
-        public Form1(Socket socket, Thread thread)
->>>>>>> Stashed changes
+        public Form1() { }
+
+        public Form1(Socket socket, Thread thread, Login.Log obj)
         {
             InitializeComponent();
             Printer = new printer(print);
             Cleaner = new cleaner(clearChat);
-<<<<<<< Updated upstream
-            exitChat.Enabled = false;
-=======
+            recognizer = new Recognizer();  //start assistant;
 
-            _usersPath = "D:..//..//json//users";  //it was json.
+            CurrentUser(ref obj);
+
+            _checkNew = true;
+            _settingsPath = "..//..//Settings//Settings.json";
+            _fileOfChats = "..//..//ListOfChats//ListOfChats.dat";
+            //_usersPath = "..//..//json//users";  //it was json.
             _serverSocket = socket;
-            _listOfUsers = new List<Models.ListOfUsers>();
+
+            _fileCheck = new FileCheck();
+            _listOfUsers = new List<ListOfUsers>();
 
             connect();
-            _loadFromFile();
->>>>>>> Stashed changes
+
+            //File Control
+            _fileCheck.FileExist(_settingsPath);
+            _fileCheck.FileExist(_fileOfChats);
+
+            if(new FileInfo(_settingsPath).Length != 0)
+            {
+                try
+                {
+                    JObject jObj = JObject.Parse(File.ReadAllText(_settingsPath));
+                    bool status = jObj.SelectToken("AsisStatus").Value<bool>();
+                    string mFont = jObj.SelectToken("MessageFont").Value<string>();
+                    string inFont = jObj.SelectToken("inputTextFont").Value<string>();
+                    string NLOU = jObj.SelectToken("NamesListOfUsers").Value<string>();
+
+                    recognizer.Status = status;
+                    chatBox.Font = new Font(mFont, 7.8f);
+                    chat_msg.Font = new Font(inFont, 7.8f);
+                    ChatListShow = NLOU;
+                }
+                catch(SerializationException ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+            else
+            {
+                Models.Setting settings = new Models.Setting(recognizer.Status, null, 
+                    chatBox.Font.Name, chat_msg.Font.Name, "Nick");
+
+                using (StreamWriter file = File.CreateText(_settingsPath))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    serializer.Serialize(file, settings);
+                }
+            }
+
+            if (new FileInfo(_fileOfChats).Length != 0)
+            {
+                Load load = new Load();
+                load.LoadFromFile(ref _listOfUsers, ref _fileOfChats);
+            }
+            if (_listOfUsers != null)
+                ChatListItemsShow();
+
+            //assistant.Func();
+        }
+
+        private void CurrentUser(ref Login.Log obj)
+        {
+            User = new User.Info(obj.Name, obj.Surname, obj.NickName, obj.Email, obj.Phone);
         }
 
         private void listner()
         {
-            while (_serverSocket.Connected)
+            try
             {
-                byte[] buffer = new byte[8196];
-                int bytesRec = _serverSocket.Receive(buffer);
-                string data = Encoding.UTF8.GetString(buffer, 0, bytesRec);
-                if (data.Contains("#updatechat"))
+                while (_serverSocket.Connected)
                 {
-<<<<<<< Updated upstream
-                    UpdateChat(data);
-                    continue;
-                }
-            }
-=======
-                    byte[] buffer = new byte[8196];
-                    int bytesRec = _serverSocket.Receive(buffer);
-                    string data = Encoding.UTF8.GetString(buffer, 0, bytesRec);
+                    byte[] buffer = new byte[_serverSocket.ReceiveBufferSize];
+                    int bytesRec = _serverSocket.Receive(buffer, SocketFlags.None);
+                    if (bytesRec == 0)
+                        break;
 
-                    switch(data.Split(' ')[0])
+                    string path = "D:\\Програмы\\.Net projects\\Project Chat\\chatClient\\chatClient\\testX.dat";
+                    FileStream file = new FileStream(path, FileMode.Open);
+                    
+
+                    string data = Encoding.UTF8.GetString(buffer, 0, bytesRec);
+                    file.Position = 0;
+                    file.Write(buffer, 0, bytesRec);
+
+                    file.Close();
+
+                    /*switch(data.Split(' ')[0])
                     {
                         case "#Search":
                             if (data.Contains("No result"))
@@ -82,25 +146,54 @@ namespace chatClient
                                 AddNewFriend(data);
 
                             break;
-
-                        /*case "#updatechat":
-                            UpdateChat(data);
-                            continue;
-                            //break;*/
-                    }
+                    }*/
 
                     if (data.Contains("#updatechat"))
                     {
                         UpdateChat(data);
                         continue;
                     }
-                    /*if(data.Contains("#Search"))
+                    if(data.Contains("#Search"))
                     {
                         if (data.Contains("No result"))
                             MessageBox.Show("There are no users with this phone number");
                         else
                             AddNewFriend(data);
-                    }*/
+                        return;
+                    }
+                    if (data == "#Answer")
+                    {
+                        MessageBox.Show("Answer");
+                        string path1 = "D:\\Програмы\\.Net projects\\Project Chat\\chatClient\\chatClient\\ListOfChats\\ListOfChats.dat";
+                        _serverSocket.SendFile(path1);
+                    }
+
+                    if(data.Split(' ')[0] == "#Backup")
+                    {
+                        string text = "";
+                        string temp = "";
+
+                        for (int i = 22; i < data.Length; i++)
+                            temp += data[i];
+
+                        byte[] L = Encoding.UTF8.GetBytes(temp);
+
+                        for (int i = 0; i < L.Length; i++)
+                        {
+                            text += L[i];
+                            //MessageBox.Show(L[i].ToString());
+                        }
+                        MessageBox.Show(text + " Length: " + text.Length);
+
+                        List<ListOfUsers> list = new List<ListOfUsers>();
+                        Backup obj = new Backup();
+                        list = obj.Decoder(L);
+
+                        MessageBox.Show(_listOfUsers[0].NickName);
+                        MessageBox.Show(list[0].NickName);
+                    }
+
+                    //MessageBox.Show(data);
                 }
             }
             catch(Exception ex)
@@ -108,24 +201,13 @@ namespace chatClient
                 MessageBox.Show(ex.ToString());
                 print("Связь с сервером потеряна!");
             }
->>>>>>> Stashed changes
         }
 
         private void connect()
         {
             try
             {
-                //IPHostEntry ipHost = Dns.GetHostEntry(_serverHost);
-                //IPAddress ipAddress = ipHost.AddressList[0];
-                _serverHost = textBox1.Text;
-                _serverPort = Int32.Parse(textBox2.Text);
-
-                IPAddress ipAddress = IPAddress.Parse(_serverHost);
-                IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, _serverPort);
-                _serverSocket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                _serverSocket.Connect(ipEndPoint);
-
-                _clientThread = new Thread(listner);
+                _clientThread = new Thread(this.listner);
                 _clientThread.IsBackground = true;
                 _clientThread.Start();
             }
@@ -147,9 +229,56 @@ namespace chatClient
 
         private void UpdateChat(string data)
         {
+            int number = 0;
+            int counter = 0;
+            int selected = ChatList.SelectedIndex;
+            string author = data.Split(' ')[2];
+            string message = "";
+            string phone = data.Split(' ')[1];
+            _checkNew = true;
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                if (counter == 3)
+                    message += data[i];
+                else if (data[i] == ' ' && counter < 3)
+                    counter++;
+            }
+
+            counter = 0;    //Maybe I need it later!
+            foreach (var V in _listOfUsers)
+            {
+                if (V.Phone == phone)
+                {
+                    V.messages.Add(new Models.Message(data.Split(' ')[2], message));
+                    V.NewMsg = true;
+                    number = V.ListNumber;
+                    break;
+                }
+                counter++;
+            }
+                
+            Sort(counter);
+
+            this.Invoke((MethodInvoker)delegate
+            {
+                if (ChatList.SelectedIndex == number)
+                    print(author + ": " + message);
+                else
+                {
+                    this.ChatListItemsShow();
+                    //_checkNew = false;
+                    //ChatList.SetSelected(selected + 1, true);
+                }
+                //this.ChatList.Items[0] += "   *";
+                
+                /*if (ChatList.SelectedIndex == 0)    //ERROR!!!
+                    print(message);*/
+            });
+
             //#updatechat&userName~data|username~data
-            clearChat();
-            string[] messages = data.Split('&')[1].Split('|');
+            //clearChat();                                  //HERE
+            /*string[] messages = data.Split('&')[1].Split('|');
             int countMessages = messages.Length;
             if (countMessages <= 0) return;
             for (int i = 0; i < countMessages; i++)
@@ -157,10 +286,22 @@ namespace chatClient
                 try
                 {
                     if (string.IsNullOrEmpty(messages[i])) continue;
-                    //print(String.Format("[{0}]:{1}.", messages[i].Split('~')[0], messages[i].Split('~')[1]));
+                    print(String.Format("[{0}]:{1}.", messages[i].Split('~')[0], messages[i].Split('~')[1]));
                     MessageBox.Show(data);
                 }
                 catch { continue; }
+            }*/
+        }
+
+        private void send(byte[] array)
+        {
+            try
+            {
+                int bytesSent = _serverSocket.Send(array);
+            }
+            catch
+            {
+                print("Связь с сервером прервалась...");
             }
         }
 
@@ -192,68 +333,70 @@ namespace chatClient
 
         private void sendMessage()
         {
+            string phone = _listOfUsers[ChatList.SelectedIndex].Phone;
+            Save save = new Save();
+
+            _listOfUsers[ChatList.SelectedIndex].messages.Add(new Models.Message(User.NickName, chat_msg.Text));
+            print(User.NickName + ": " + chat_msg.Text);
+
             try
             {
                 string data = chat_msg.Text;
-                if (string.IsNullOrEmpty(data)) return;
-                send("#newmsg&" + data);
+                if (string.IsNullOrEmpty(data))
+                    return;
+                send("#newmsg " + phone + " " + data);    //CHANGE email on sender phone
                 chat_msg.Text = string.Empty;
             }
             catch { MessageBox.Show("Ошибка при отправке сообщения!"); }
+
+            if (ChatList.SelectedIndex != 0)
+            {
+                Sort(ChatList.SelectedIndex);
+                ChatListItemsShow();
+            }
+
+            save.SaveInFile(ref _listOfUsers, ref _fileOfChats);        
         }
 
         private void AddNewFriend(string data)  //Add new friends
         {
-            ActiveForm.Invoke((MethodInvoker)delegate
+            this.Invoke((MethodInvoker)delegate
             {
+                Save save = new Save();
+                Load load = new Load();
+                //List<Models.ListOfUsers> temp = new List<Models.ListOfUsers>();
                 List<Models.Message> list = new List<Models.Message>();
 
-                //test
-                list.Add(new Models.Message("Sinned", "Hello"));
-                list.Add(new Models.Message("Lynx", "Hi, how are you?"));
-                //test
+                _listOfUsers.Add(new ListOfUsers(ChatList.Items.Count, data.Split(' ')[1],
+                    data.Split(' ')[2], data.Split(' ')[3], data.Split(' ')[4], data.Split(' ')[5], list, false, DateTime.Now));
 
-                _listOfUsers.Add(new Models.ListOfUsers(ChatList.Items.Count, data.Split(' ')[1],
-                    data.Split(' ')[2], data.Split(' ')[3], data.Split(' ')[4], data.Split(' ')[5], list, DateTime.Now));
-
-<<<<<<< Updated upstream
-            connect();
-=======
                 //Sort listOfUsers and ChatList
                 Sort(ref _listOfUsers);
->>>>>>> Stashed changes
-
-                _ChatListItemsShow();   //Show friends in listbox. 
-
-                _saveInFile();  //Save friends and chats in file.
-
-                //Add users to json
-                /*if (File.Exists(_usersPath) != true)
-                {
-                    File.Create(_usersPath);
-                }
-
-                Models.Users obj = new Models.Users
-                {
-                    Name = data.Split(' ')[1],
-                    Surname = data.Split(' ')[2],
-                    NickName = data.Split(' ')[3],
-                    Email = data.Split(' ')[4],
-                    Phone = data.Split(' ')[5]
-                };
-
-                using (StreamWriter file = File.CreateText(_usersPath))     //ERROR: ONLY FILE REWRITE. 
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    serializer.Serialize(file, obj);
-                }*/
+                save.SaveInFile(ref _listOfUsers, ref _fileOfChats);
+                ChatListItemsShow();   //Show friends in listbox.
             });
+        }
+
+        private void Sort(int number)
+        {
+            List<ListOfUsers> temp = new List<ListOfUsers>();
+            temp.Add(_listOfUsers[number]);
+            temp[0].ListNumber = 0;
+
+            foreach(var V in _listOfUsers)
+            {
+                if (V.Phone != _listOfUsers[number].Phone)
+                    temp.Add(new ListOfUsers(V.ListNumber + 1, V.Name, V.Surname, 
+                        V.NickName, V.Email, V.Phone, V.messages, false, DateTime.Now));
+            }
+
+            _listOfUsers = temp;
         }
 
         private void Sort(ref List<Models.ListOfUsers> list)
         {
-            Models.ListOfUsers temp = new Models.ListOfUsers();
-            List<Models.ListOfUsers> SortList = new List<Models.ListOfUsers>();
+            ListOfUsers temp = new ListOfUsers();
+            List<ListOfUsers> SortList = new List<ListOfUsers>();
 
             if (list.Count > 1)
             {
@@ -273,62 +416,7 @@ namespace chatClient
                     }
 
                 list = SortList;
-
-                foreach (var V in SortList)
-                    MessageBox.Show(V.ListNumber.ToString());
             }
-        }
-
-        private void _saveInFile()
-        {
-            FileExist(_usersPath);
-
-            FileStream SaveInFile = File.OpenWrite(_usersPath);
-            BinaryFormatter formatter = new BinaryFormatter();
-
-            try
-            {
-                formatter.Serialize(SaveInFile, _listOfUsers);
-            }
-            catch(SerializationException ex)
-            {
-                MessageBox.Show("Failed to serialize. Reason: " + ex);
-            }
-            finally
-            {
-                SaveInFile.Close();
-            }
-        }
-
-        private void _loadFromFile()
-        {
-            FileExist(_usersPath);
-
-            FileStream LoadFromFile = File.OpenRead(_usersPath);
-            BinaryFormatter formatter = new BinaryFormatter();
-
-            try
-            {
-                if (LoadFromFile.Length != 0)
-                {
-                    _listOfUsers = (List<Models.ListOfUsers>)formatter.Deserialize(LoadFromFile);
-                    _ChatListItemsShow();
-                }
-            }
-            catch(SerializationException ex)
-            {
-                MessageBox.Show("Failed to deserialize. Reason: " + ex);
-            }
-            finally
-            {
-                LoadFromFile.Close();
-            }
-        }
-
-        public void FileExist(string filepath)
-        {
-            if (!File.Exists(filepath))
-                File.Create(filepath);
         }
 
         private void chat_send_Click(object sender, EventArgs e)
@@ -348,14 +436,29 @@ namespace chatClient
                 sendMessage();
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        public void Search(string number)
         {
             try
             {
-                if (string.IsNullOrEmpty(SearchBox.Text))
+                bool check = true;
+
+                if (string.IsNullOrEmpty(number))
                     return;
 
-                send("#Search&" + SearchBox.Text);
+                if (User.Phone == number)
+                {
+                    MessageBox.Show("This is your number");
+                    check = false;
+                    return;
+                }
+                else if (_listOfUsers != null)
+                    foreach (var V in _listOfUsers)
+                        if (V.Phone == number)
+                            check = false;
+
+                if (check == true)
+                    send("#Search&" + number);
+                else MessageBox.Show("This user is already in friends");
             }
             catch
             {
@@ -363,27 +466,145 @@ namespace chatClient
             }
         }
 
-        private void _ChatListItemsShow()
+        public void ChatListItemsShow()     //Chat list show
         {
             ChatList.Items.Clear();
-            foreach (var V in _listOfUsers)
-                ChatList.Items.Add(V.NickName);
+
+            if(ChatListShow == "Nick")
+                foreach (var V in _listOfUsers)
+                {
+                    if (V.NewMsg == false)
+                        ChatList.Items.Add(V.NickName);
+                    else
+                        ChatList.Items.Add(V.NickName + "   *");
+                }
+            else if(ChatListShow == "Phone")
+                foreach (var V in _listOfUsers)
+                {
+                    if (V.NewMsg == false)
+                        ChatList.Items.Add(V.Phone);
+                    else
+                        ChatList.Items.Add(V.Phone + "   *");
+                }
+            else if(ChatListShow == "Name")
+                foreach (var V in _listOfUsers)
+                {
+                    if (V.NewMsg == false)
+                        ChatList.Items.Add(V.Name);
+                    else
+                        ChatList.Items.Add(V.Name + "   *");
+                }
+            else if(ChatListShow == "Surname")
+                foreach (var V in _listOfUsers)
+                {
+                    if (V.NewMsg == false)
+                        ChatList.Items.Add(V.Surname);
+                    else
+                        ChatList.Items.Add(V.Surname + "   *");
+                }
         }
 
         private void ChatList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            clearChat();
-
-            foreach (var V in _listOfUsers[ChatList.SelectedIndex].messages)
+            if (_checkNew == true)
             {
-                print(V.User + ": " + V.Text);
+                int selected = ChatList.SelectedIndex;
+                string text = ChatList.SelectedItem.ToString();
+                //MessageBox.Show("IN");
+
+                clearChat();
+
+                if (text.Contains('*'))
+                {
+                    _checkNew = false;
+                    _listOfUsers[ChatList.SelectedIndex].NewMsg = false;
+                    ChatListItemsShow();
+                    ChatList.SetSelected(selected, true);
+                }
+
+                ChatName.Text = ChatList.SelectedItem.ToString() + " Chat";
+
+                foreach (var V in _listOfUsers[ChatList.SelectedIndex].messages)
+                {
+                    print(V.User + ": " + V.Text);
+                }
             }
+            _checkNew = true;
         }
 
         private void Backup_Click(object sender, EventArgs e)
         {
-            string data = "#Backup " + _listOfUsers.ToString(); //Wrong!!!!
-            send(data);
+            int size;
+            int counter = 0;
+            byte[] com;
+            byte[] backup;
+            byte[] pack;
+            Backup obj = new Backup();
+            string command = "#Backup +380988012661 ";
+
+            com = Encoding.UTF8.GetBytes(command);
+            backup = obj.ConvertInByte(_listOfUsers);
+            //backup = Encoding.UTF8.GetBytes();
+            pack = new byte[com.Length + backup.Length];
+            
+            MessageBox.Show(command.Length.ToString() + " ~ " + com.Length.ToString());
+            size = com.Length;
+
+            for (int i = 0; i < size; i++)
+            {
+                pack[counter] = com[i];
+                counter++;
+            }
+
+            size = backup.Length;
+            for (int i = 0; i < size; i++)
+            {
+                pack[counter] = backup[i];
+                counter++;
+            }
+
+            string text = "";
+            for (int i = 0; i < com.Length; i++)
+                text += com[i];
+            for (int i = 0; i < backup.Length; i++)
+                text += backup[i];
+
+            MessageBox.Show(text + " Length: " + text.Length);
+            string path = "D:\\Програмы\\.Net projects\\Project Chat\\chatClient\\chatClient\\ListOfChats\\ListOfChats.dat";
+            string path1 = "D:\\Програмы\\.Net projects\\Project Chat\\chatClient\\chatClient\\testX.dat";
+            //_serverSocket.SendFile(path);
+            //_serverSocket.Send(pack);
+            byte[] G = Encoding.UTF8.GetBytes("#Backup");
+
+            //List<ListOfUsers> list = new List<ListOfUsers>();
+            //obj.LoadFromFile(ref list, ref path1);
+
+            //MessageBox.Show(list[0].NickName);
+            //_listOfUsers = list;
+            _serverSocket.Send(G);
+            //_serverSocket.SendFile(path);
+            //send(pack);
+        }
+
+        //Controls
+        public void assistantStatus(bool status)
+        {
+            recognizer.Status = status;
+        }
+        //Controls
+
+        private void searchUserToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Search search = new Search();
+            search.Owner = this;
+            search.Show();
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings settings = new Settings(_settingsPath);
+            settings.Owner = this;
+            settings.Show();
         }
     }
 }

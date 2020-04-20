@@ -21,11 +21,12 @@ namespace chatClient
         private Thread th;
         private string _path;
 
-        private struct Log
+        public class Log : User.Info
         {
-            public string Email;
             public string Password;
         }
+
+        private Log log;
 
         public Login()
         {
@@ -124,27 +125,34 @@ namespace chatClient
                 {
                     if(data.Count(c => c == ' ') == 3)
                     {
-                        ErrEmail.Text = "Wrong Email";
-                        ErrPassword.Text = "Wrong Password";
+                        ErrEmail.Text = "Невірний Email";
+                        ErrPassword.Text = "Невірний пароль";
                     }
                     else
                     {
                         if (data.Split(' ')[1] == "Email")
-                            ErrEmail.Text = "Wrong Email";
+                        {
+                            ErrEmail.Text = "Невірний Email";
+                            ErrPassword.Text = "Невірний пароль";
+                        }
                         else
-                            ErrPassword.Text = "Wrong Password";
+                            ErrPassword.Text = "Невірний пароль";
                     }
                 }
                 else
                 {
-                    if(RememberMe.Checked)
+                    log = new Log
                     {
-                        Log log = new Log
-                        {
-                            Email = data.Split(' ')[1],
-                            Password = data.Split(' ')[2]
-                        };
+                        Email = data.Split(' ')[1],
+                        Password = data.Split(' ')[2],
+                        NickName = data.Split(' ')[3],
+                        Phone = data.Split(' ')[4],
+                        Name = data.Split(' ')[5],
+                        Surname = data.Split(' ')[6]
+                    };
 
+                    if (RememberMe.Checked)
+                    {
                         using (StreamWriter file = File.CreateText(_path))
                         {
                             JsonSerializer serializer = new JsonSerializer();
@@ -165,7 +173,7 @@ namespace chatClient
 
         private void OpenNew(object obj)
         {
-            Application.Run(new Form1(ConObj._serverSocket, ConObj._clientThread));
+            Application.Run(new Form1(ConObj._serverSocket, ConObj._clientThread, log));
         }
 
         private void FileExist(string path)
