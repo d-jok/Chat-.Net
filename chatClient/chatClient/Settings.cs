@@ -132,6 +132,22 @@ namespace chatClient
             }
         }
 
+        private void UploadBackup()
+        {
+            Form1 form = this.Owner as Form1;
+            string jsonString = JsonConvert.SerializeObject(form.GetList, Formatting.Indented);
+            string temp = "#Backup " + form.GetUserInfo.Phone + " " + jsonString;
+            form.send(temp);
+        }
+
+        private void LoadBackup()
+        {
+            Form1 form = this.Owner as Form1;
+            string temp = "#GetBackup " + form.GetUserInfo.Phone;
+
+            form.send(temp);
+        }
+
         private void CancelButton_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -181,6 +197,16 @@ namespace chatClient
         private void surnaneToolStripMenuItem_Click(object sender, EventArgs e)
         {
             changeNamesInList("Surname");
+        }
+
+        private void uploadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UploadBackup();
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadBackup();
         }
     }
 }

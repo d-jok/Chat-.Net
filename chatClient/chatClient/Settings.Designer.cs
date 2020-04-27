@@ -43,6 +43,10 @@
             this.timesNewRomanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.microsoftSansSefirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.inputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.timesNewRomanToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.rageToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.microsoftSansSerifToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CancelButton = new System.Windows.Forms.Button();
             this.labelAssistant = new System.Windows.Forms.Label();
             this.labelMessageFont = new System.Windows.Forms.Label();
@@ -54,10 +58,9 @@
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.labelListOf = new System.Windows.Forms.Label();
             this.labelNLOU = new System.Windows.Forms.Label();
-            this.inputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.timesNewRomanToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.rageToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.microsoftSansSerifToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.backupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uploadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -67,10 +70,11 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.voiceAssistantToolStripMenuItem,
-            this.listOfUsersToolStripMenuItem});
+            this.listOfUsersToolStripMenuItem,
+            this.backupToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(123, 235);
+            this.menuStrip1.Size = new System.Drawing.Size(156, 235);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -79,7 +83,7 @@
             this.voiceAssistantToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.activeToolStripMenuItem});
             this.voiceAssistantToolStripMenuItem.Name = "voiceAssistantToolStripMenuItem";
-            this.voiceAssistantToolStripMenuItem.Size = new System.Drawing.Size(110, 24);
+            this.voiceAssistantToolStripMenuItem.Size = new System.Drawing.Size(143, 24);
             this.voiceAssistantToolStripMenuItem.Text = "Voice assistant";
             // 
             // activeToolStripMenuItem
@@ -112,7 +116,7 @@
             this.messageFontToolStripMenuItem,
             this.inputToolStripMenuItem});
             this.listOfUsersToolStripMenuItem.Name = "listOfUsersToolStripMenuItem";
-            this.listOfUsersToolStripMenuItem.Size = new System.Drawing.Size(110, 24);
+            this.listOfUsersToolStripMenuItem.Size = new System.Drawing.Size(143, 24);
             this.listOfUsersToolStripMenuItem.Text = "Interface";
             // 
             // nameOfUserToolStripMenuItem
@@ -123,7 +127,7 @@
             this.nameToolStripMenuItem,
             this.surnaneToolStripMenuItem});
             this.nameOfUserToolStripMenuItem.Name = "nameOfUserToolStripMenuItem";
-            this.nameOfUserToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.nameOfUserToolStripMenuItem.Size = new System.Drawing.Size(175, 26);
             this.nameOfUserToolStripMenuItem.Text = "List of users";
             // 
             // nickNameToolStripMenuItem
@@ -161,29 +165,57 @@
             this.rageToolStripMenuItem,
             this.microsoftSansSefirToolStripMenuItem});
             this.messageFontToolStripMenuItem.Name = "messageFontToolStripMenuItem";
-            this.messageFontToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.messageFontToolStripMenuItem.Size = new System.Drawing.Size(175, 26);
             this.messageFontToolStripMenuItem.Text = "Message Font";
             // 
             // timesNewRomanToolStripMenuItem
             // 
             this.timesNewRomanToolStripMenuItem.Name = "timesNewRomanToolStripMenuItem";
-            this.timesNewRomanToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.timesNewRomanToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.timesNewRomanToolStripMenuItem.Text = "Times New Roman";
             this.timesNewRomanToolStripMenuItem.Click += new System.EventHandler(this.timesNewRomanToolStripMenuItem_Click);
             // 
             // rageToolStripMenuItem
             // 
             this.rageToolStripMenuItem.Name = "rageToolStripMenuItem";
-            this.rageToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.rageToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.rageToolStripMenuItem.Text = "Rage";
             this.rageToolStripMenuItem.Click += new System.EventHandler(this.rageToolStripMenuItem_Click);
             // 
             // microsoftSansSefirToolStripMenuItem
             // 
             this.microsoftSansSefirToolStripMenuItem.Name = "microsoftSansSefirToolStripMenuItem";
-            this.microsoftSansSefirToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.microsoftSansSefirToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.microsoftSansSefirToolStripMenuItem.Text = "Microsoft Sans Serif";
             this.microsoftSansSefirToolStripMenuItem.Click += new System.EventHandler(this.microsoftSansSefirToolStripMenuItem_Click);
+            // 
+            // inputToolStripMenuItem
+            // 
+            this.inputToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.timesNewRomanToolStripMenuItem1,
+            this.rageToolStripMenuItem1,
+            this.microsoftSansSerifToolStripMenuItem});
+            this.inputToolStripMenuItem.Name = "inputToolStripMenuItem";
+            this.inputToolStripMenuItem.Size = new System.Drawing.Size(175, 26);
+            this.inputToolStripMenuItem.Text = "Input Font";
+            // 
+            // timesNewRomanToolStripMenuItem1
+            // 
+            this.timesNewRomanToolStripMenuItem1.Name = "timesNewRomanToolStripMenuItem1";
+            this.timesNewRomanToolStripMenuItem1.Size = new System.Drawing.Size(215, 26);
+            this.timesNewRomanToolStripMenuItem1.Text = "Times New Roman";
+            // 
+            // rageToolStripMenuItem1
+            // 
+            this.rageToolStripMenuItem1.Name = "rageToolStripMenuItem1";
+            this.rageToolStripMenuItem1.Size = new System.Drawing.Size(215, 26);
+            this.rageToolStripMenuItem1.Text = "Rage";
+            // 
+            // microsoftSansSerifToolStripMenuItem
+            // 
+            this.microsoftSansSerifToolStripMenuItem.Name = "microsoftSansSerifToolStripMenuItem";
+            this.microsoftSansSerifToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
+            this.microsoftSansSerifToolStripMenuItem.Text = "Microsoft Sans Serif";
             // 
             // CancelButton
             // 
@@ -264,7 +296,7 @@
             // splitter1
             // 
             this.splitter1.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.splitter1.Location = new System.Drawing.Point(123, 0);
+            this.splitter1.Location = new System.Drawing.Point(156, 0);
             this.splitter1.Name = "splitter1";
             this.splitter1.Size = new System.Drawing.Size(10, 235);
             this.splitter1.TabIndex = 10;
@@ -289,33 +321,28 @@
             this.labelNLOU.TabIndex = 12;
             this.labelNLOU.Text = "Nick";
             // 
-            // inputToolStripMenuItem
+            // backupToolStripMenuItem
             // 
-            this.inputToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.timesNewRomanToolStripMenuItem1,
-            this.rageToolStripMenuItem1,
-            this.microsoftSansSerifToolStripMenuItem});
-            this.inputToolStripMenuItem.Name = "inputToolStripMenuItem";
-            this.inputToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.inputToolStripMenuItem.Text = "Input Font";
+            this.backupToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadToolStripMenuItem,
+            this.uploadToolStripMenuItem});
+            this.backupToolStripMenuItem.Name = "backupToolStripMenuItem";
+            this.backupToolStripMenuItem.Size = new System.Drawing.Size(143, 24);
+            this.backupToolStripMenuItem.Text = "Backup";
             // 
-            // timesNewRomanToolStripMenuItem1
+            // loadToolStripMenuItem
             // 
-            this.timesNewRomanToolStripMenuItem1.Name = "timesNewRomanToolStripMenuItem1";
-            this.timesNewRomanToolStripMenuItem1.Size = new System.Drawing.Size(216, 26);
-            this.timesNewRomanToolStripMenuItem1.Text = "Times New Roman";
+            this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.loadToolStripMenuItem.Text = "Load";
+            this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
-            // rageToolStripMenuItem1
+            // uploadToolStripMenuItem
             // 
-            this.rageToolStripMenuItem1.Name = "rageToolStripMenuItem1";
-            this.rageToolStripMenuItem1.Size = new System.Drawing.Size(216, 26);
-            this.rageToolStripMenuItem1.Text = "Rage";
-            // 
-            // microsoftSansSerifToolStripMenuItem
-            // 
-            this.microsoftSansSerifToolStripMenuItem.Name = "microsoftSansSerifToolStripMenuItem";
-            this.microsoftSansSerifToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.microsoftSansSerifToolStripMenuItem.Text = "Microsoft Sans Serif";
+            this.uploadToolStripMenuItem.Name = "uploadToolStripMenuItem";
+            this.uploadToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.uploadToolStripMenuItem.Text = "Upload";
+            this.uploadToolStripMenuItem.Click += new System.EventHandler(this.uploadToolStripMenuItem_Click);
             // 
             // Settings
             // 
@@ -377,5 +404,8 @@
         private System.Windows.Forms.ToolStripMenuItem timesNewRomanToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem rageToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem microsoftSansSerifToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem backupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem uploadToolStripMenuItem;
     }
 }

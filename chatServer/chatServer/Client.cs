@@ -10,15 +10,18 @@ namespace chatServer
     class Client
     {
         private string _userName;
-        private string _email;
-        private string _phone;
+        public string _email;
+        public string _phone;   //HERE
+        private string _command = "";
         private Socket _handler;
         private Thread _userThread;
+
+        public Client() { }
 
         public Client(Socket socket)
         {
             _handler = socket;
-            _userThread = new Thread(listner);
+            _userThread = new Thread(listener);
             _userThread.IsBackground = true;
             _userThread.Start();
         }
@@ -28,18 +31,24 @@ namespace chatServer
             get { return _userName; }
         }
 
-        private void listner()
+        private void listener()
         {
             while (true)
             {
                 try
                 {
-                    byte[] buffer = new byte[1024];
-                    int bytesRec = _handler.Receive(buffer);
+                    byte[] buffer = new byte[_handler.ReceiveBufferSize];
+                    int bytesRec = _handler.Receive(buffer, SocketFlags.None);
+
+                    //string temp = Encoding.UTF8.GetString(buffer, 0, 22);
+
                     string data = Encoding.UTF8.GetString(buffer, 0, bytesRec);
-                    handleCommand(data);
+                    handleCommand(data, this, buffer);
                 }
-                catch { ServerFunctions.EndClient(this); return; }
+                catch
+                { 
+                    ServerFunctions.EndClient(this); return; 
+                }
             }
         }
 
@@ -57,8 +66,10 @@ namespace chatServer
             catch (Exception exp) { Console.WriteLine("Error with end: {0}.", exp.Message); }
         }
 
-        private void handleCommand(string data)
+        private void handleCommand(string data, Client client, byte[] buffer)
         {
+            byte[] temp;
+
             if (data.Contains("#setname"))
             {
                 _userName = data.Split('&')[1];
@@ -67,18 +78,30 @@ namespace chatServer
             }
             if (data.Contains("#newmsg"))
             {
-                string message = data.Split('&')[1];
-                ChatController.AddMessage(_userName, message);
+                int counter = 0;
+                string phone = data.Split(' ')[1];
+                string message = "";
+
+                for (int i = 0; i < data.Length; i++)
+                {
+                    if (counter == 2)
+                        message += data[i];
+                    else if (data[i] == ' ' && counter < 2)
+                        counter++;
+                }
+
+                ServerFunctions.UpdateChats(_userName, phone, _phone, message);
+
+                //ChatController.AddMessage(_userName, message);    //HERE
                 return;
             }
-<<<<<<< Updated upstream
-=======
             if (data.Contains("#Registration"))
             {
                 Registration obj = new Registration();
                 string answer = obj.Register(data.Split('&')[1]);
 
                 _handler.Send(Encoding.UTF8.GetBytes(answer));
+                return;
             }
             if(data.Contains("#Login"))
             {
@@ -93,6 +116,7 @@ namespace chatServer
                 }
 
                 _handler.Send(Encoding.UTF8.GetBytes(answer));
+                return;
             }
             if(data.Contains("#Search"))
             {
@@ -102,12 +126,38 @@ namespace chatServer
 
                 if (answer != null)
                     _handler.Send(Encoding.UTF8.GetBytes(answer));
+
+                return;
             }
-            if(data.Contains("#Backup"))
+            if (data.Split(' ')[0] == "#Change")
             {
-                Console.WriteLine("Backup " + data.Split(' ')[1]);
+
             }
->>>>>>> Stashed changes
+
+            if (data.Split(' ')[0] == "#Backup")
+            {
+                string answer = "#Answer ";
+                string backup = "";
+                string number = data.Split(' ')[1];
+                Backup obj = new Backup();
+
+                for (int i = 22; i < data.Length; i++)
+                    backup += data[i];
+
+                answer += obj.SaveBackup(Encoding.UTF8.GetBytes(backup), number);
+                Send(answer);
+
+                return;
+            }
+            if (data.Split(' ')[0] == "#GetBackup")
+            {
+                string backup = "";
+                string number = data.Split(' ')[1];
+                Backup obj = new Backup();
+
+                backup += obj.GetBackup(number);
+                Send(backup);
+            }
         }
 
         public void UpdateChat()

@@ -6,7 +6,7 @@ using System.Text;
 namespace chatClient.Models
 {
     [Serializable]
-    class Message
+    public class Message
     {
         public string User;
         public string Text;

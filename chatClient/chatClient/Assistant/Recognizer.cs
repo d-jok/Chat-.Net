@@ -4,18 +4,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using chatClient.Models;
 
 namespace chatClient.Assistant
 {
     class Recognizer
     {
         public bool Status;
+        private bool _hello;
+        private string _name;
         private SpeechRecognitionEngine sre;
         GrammarBuilder gb;
+        Form1 form1;
 
-        public Recognizer()
+        public Recognizer(Form1 obj)
         {
             Status = true;
+            _hello = false;
+            _name = "еви";
+            form1 = obj;
+
             System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("ru-RU");
             sre = new SpeechRecognitionEngine();
             sre.SetInputToDefaultAudioDevice();//microfone
@@ -23,20 +31,58 @@ namespace chatClient.Assistant
             sre.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(SpeechRecognized);
 
             Choices numbers = new Choices();
-            //numbers.Add(new string[] { "привет хрень", "один", "два", "три", "четыре", "пять" });
-            numbers.Add(new string[] { "привет ассистент", "ассистент" });
+            numbers = CreateGramar();
 
             gb = new GrammarBuilder();
             gb.Culture = ci;
             gb.Append(numbers);
-            //gb.Append(new Choices("left", "right", "up", "down"));  //добавляем используемые фразы
-            //sre.UnloadAllGrammars();
+            sre.UnloadAllGrammars();
             Grammar g = new Grammar(gb);
             sre.LoadGrammar(g);//загружаем "грамматику"
 
-            sre.RecognizeAsync(RecognizeMode.Multiple);
+            sre.RecognizeAsync(RecognizeMode.Multiple);           
+        }
 
-            
+        private Choices CreateGramar()
+        {
+            Choices ch = new Choices();
+            ch.Add(new string[] { _name, "привет " + _name,
+                _name + " есть новые сообщения",
+                _name + " назови случайное число",
+                _name + " который час",
+                _name + " ты молодец"});
+
+            return ch;
+        }
+
+        private void CheckNewMsg()
+        {
+            string text = "у вас нету новых сообщений";
+            List<string> list = new List<string>();
+            Speaker speaker = new Speaker();
+
+            foreach(var V in form1._listOfUsers)
+            {
+                if (V.NewMsg == true)
+                {
+                    list.Add(V.Name + " " + V.Surname);
+                }
+            }
+
+            if (list.Count() == 0)
+                speaker.Speak(text);
+            else
+            {
+                speaker.Speak("у вас есть новые сообщения от ");
+                foreach (var V in list)
+                    speaker.Speak(V);
+            }
+        }
+
+        private string SayTime()
+        {
+            DateTime time = DateTime.Now;
+            return time.Hour + " " + time.Minute.ToString();
         }
 
         private void SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
@@ -47,23 +93,46 @@ namespace chatClient.Assistant
 
                 if (e.Result.Confidence > 0.7)
                 {
-                    if (e.Result.Text == "привет ассистент")
+                    if (e.Result.Text == "привет " + _name)
                     {
-                        speaker.Speak("Привет, пользователь");
+                        if (_hello == false)
+                        {
+                            _hello = true;
+                            speaker.Speak("привет");
+                        }
+                        else
+                            speaker.Speak("мы уже здоровались");
+
+                        return;
                     }
-                    else if (e.Result.Text == "ассистент")
+                    else if (e.Result.Text == _name)
+                    {
                         speaker.Speak("Слушаю");
-                    //MessageBox.Show(e.Result.Text);
-                    //MessageBox.Show("Привет, лошара");
+                        return;
+                    }
+                    else if (e.Result.Text == _name + " назови случайное число")
+                    {
+                        Random rand = new Random();
+                        speaker.Speak(rand.Next(1000).ToString());
+                        return;
+                    }
+                    else if (e.Result.Text == _name + " есть новые сообщения")
+                    {
+                        CheckNewMsg();
+                        return;
+                    }
+                    else if (e.Result.Text == _name + " который час")
+                    {
+                        speaker.Speak(SayTime());
+                        return;
+                    }
+                    else if (e.Result.Text == _name + " ты молодец")
+                    {
+                        speaker.Speak("спасибо");
+                        return;
+                    }
                 }
-                //MessageBox.Show("Recognized phrase: " + e.Result.Text);
             }
         }
-
-        // Handle the SpeechRecognized event.  
-        /*static void recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
-        {
-            MessageBox.Show("Recognized text: " + e.Result.Text);
-        }*/
     }
 }

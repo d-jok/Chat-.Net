@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -11,9 +13,16 @@ namespace chatServer
 {
     class Server
     {
+        private bool _power = true;
+
         private const string _serverIP = "192.168.1.2";
         private const int _serverPORT = 9933;
         private static Thread _serverThread;
+
+        public void SetPower(bool obj)
+        {
+            _power = obj;
+        }
 
         private static void StartServer()
         {
@@ -21,7 +30,9 @@ namespace chatServer
             String host = Dns.GetHostName();
             // Получение ip-адреса.
             IPAddress ipAddress = Dns.GetHostByName(host).AddressList[0];
-            //string pubIp = new System.Net.WebClient().DownloadString("https://api.ipify.org");
+
+            //IPAddress ipAddress = IPAddress.Parse(_serverIP);
+
             //ipAddress = IPAddress.Any;
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, _serverPORT);
             Socket socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -46,21 +57,32 @@ namespace chatServer
             if (cmd.Contains("/getusers"))
             {
                 int countUsers = ServerFunctions.Clients.Count;
-                for (int i = 0; i < countUsers; i++)
+
+                if (ServerFunctions.Clients.Count() != 0)
                 {
-                    Console.WriteLine("[{0}]: {1}", i, ServerFunctions.Clients[i].UserName);
+                    for (int i = 0; i < countUsers; i++)
+                    {
+                        Console.WriteLine("[{0}]: {1}", i, ServerFunctions.Clients[i].UserName);
+                    }
                 }
+                else
+                    Console.WriteLine("There are no users");
             }
-            if (cmd.Contains("/poweroff"))
+            else if (cmd.Contains("/poweroff"))
             {
+                Server obj = new Server();
+
                 _serverThread.Abort();
+                Environment.Exit(0);
+            }
+            else
+            {
+                Console.WriteLine("Command was not found");
             }
         }
 
         static void Main(string[] args)
         {
-<<<<<<< Updated upstream
-=======
             Server obj = new Server();
 
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -77,12 +99,14 @@ namespace chatServer
                 Console.WriteLine(ex.Message);
             }
 
->>>>>>> Stashed changes
             _serverThread = new Thread(StartServer);
             _serverThread.IsBackground = true;
             _serverThread.Start();
             while (true)
+            {
+                //Console.Write("$ ");
                 handlerCommands(Console.ReadLine());
+            }
         }
     }
 }

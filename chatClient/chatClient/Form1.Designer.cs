@@ -34,7 +34,6 @@
             this.chat_send = new System.Windows.Forms.Button();
             this.ChatList = new System.Windows.Forms.ListBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.Backup = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.myProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -100,16 +99,6 @@
             this.label5.TabIndex = 15;
             this.label5.Text = "List of users:";
             // 
-            // Backup
-            // 
-            this.Backup.Location = new System.Drawing.Point(582, 6);
-            this.Backup.Name = "Backup";
-            this.Backup.Size = new System.Drawing.Size(75, 23);
-            this.Backup.TabIndex = 16;
-            this.Backup.Text = "Backup";
-            this.Backup.UseVisualStyleBackColor = true;
-            this.Backup.Click += new System.EventHandler(this.Backup_Click);
-            // 
             // menuStrip1
             // 
             this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
@@ -137,6 +126,7 @@
             this.myProfileToolStripMenuItem.Name = "myProfileToolStripMenuItem";
             this.myProfileToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
             this.myProfileToolStripMenuItem.Text = "My profile";
+            this.myProfileToolStripMenuItem.Click += new System.EventHandler(this.myProfileToolStripMenuItem_Click);
             // 
             // searchUserToolStripMenuItem
             // 
@@ -148,7 +138,7 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
@@ -158,7 +148,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.Backup);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.ChatList);
             this.Controls.Add(this.chat_send);
@@ -181,7 +170,6 @@
         private System.Windows.Forms.Button chat_send;
         private System.Windows.Forms.ListBox ChatList;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button Backup;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem menuToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem myProfileToolStripMenuItem;

@@ -5,7 +5,7 @@ using chatClient.User;
 namespace chatClient.Models
 {
     [Serializable]
-    class ListOfUsers : Info
+    public class ListOfUsers : Info
     {
         public int ListNumber;
         //Name, Surname, ... were HERE!!!

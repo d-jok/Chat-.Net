@@ -51,3 +51,4 @@ D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\S
 D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\bin\Debug\System.Threading.Tasks.xml
 D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.Search.resources
 D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.Settings.resources
+D:\Програмы\.Net projects\Project Chat\chatClient\chatClient\obj\Debug\chatClient.UserProfile.resources
