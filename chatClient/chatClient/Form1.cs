@@ -186,7 +186,7 @@ namespace chatClient
 
                         if(answer == "Info change success")
                         {
-                            MessageBox.Show("Close this window and start this program again",
+                            MessageBox.Show("Close this window and restart this program again",
                                 "Information",
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);

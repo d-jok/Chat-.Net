@@ -115,6 +115,7 @@ namespace chatServer
             }
 
             sqlUpdate += values;
+            sqlUpdate += " WHERE Phone = '" + number + "'";
             Console.WriteLine(sqlUpdate);
 
             try
