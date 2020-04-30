@@ -66,7 +66,9 @@ namespace chatServer
             }
             else
             {
-                Console.WriteLine("NewMsg");
+                TempMessage obj = new TempMessage();
+                obj.AddNewMessage(ref phone, ref from, ref userName, ref message);
+                //Console.WriteLine("NewMsg");
                 //status = backup.SaveInDB(phone, list);
                 //Console.WriteLine(status);
             }

@@ -29,7 +29,6 @@ namespace chatServer
                 if (fields[i] == '/')
                     fCounter++;
 
-            //fCounter++;
             for(int i = 0; i < fCounter; i++)
             {
                 list.Add(new Parse(fields.Split('/')[i], data.Split(' ')[i]));
@@ -70,9 +69,6 @@ namespace chatServer
             string _conLine = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             List<Parse> parses = new List<Parse>();
 
-            Console.WriteLine(fields);
-            Console.WriteLine(data);
-
             Parser(ref parses, ref fields, ref data);
             n = parses.Count;
             string pass = parses[n - 1].value;
@@ -109,14 +105,14 @@ namespace chatServer
                 }
             }
 
-            foreach(var V in parses)
+            /*foreach(var V in parses)
             {
                 Console.WriteLine(V.field + " " + V.value);
-            }
+            }*/
 
             sqlUpdate += values;
             sqlUpdate += " WHERE Phone = '" + number + "'";
-            Console.WriteLine(sqlUpdate);
+            //Console.WriteLine(sqlUpdate);
 
             try
             {

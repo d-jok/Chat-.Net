@@ -11,3 +11,6 @@ D:\Програмы\.Net projects\Project Chat\chatServer\chatServer\obj\Debug\c
 D:\Програмы\.Net projects\Project Chat\chatServer\chatServer\obj\Debug\chatServer.exe
 D:\Програмы\.Net projects\Project Chat\chatServer\chatServer\obj\Debug\chatServer.pdb
 D:\Програмы\.Net projects\Project Chat\chatServer\chatServer\bin\Debug\chatServer.exe.config
+D:\Програмы\.Net projects\Project Chat\chatServer\chatServer\bin\Debug\Newtonsoft.Json.dll
+D:\Програмы\.Net projects\Project Chat\chatServer\chatServer\bin\Debug\Newtonsoft.Json.xml
+D:\Програмы\.Net projects\Project Chat\chatServer\chatServer\obj\Debug\chatServer.csproj.CopyComplete

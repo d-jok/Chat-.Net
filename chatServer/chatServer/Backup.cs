@@ -11,7 +11,7 @@ using System.Text;
 namespace chatServer
 {
     [Serializable]
-    struct Message
+    public struct Message
     {
         public string User;
         public string Text;
