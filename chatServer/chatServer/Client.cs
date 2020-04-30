@@ -89,10 +89,36 @@ namespace chatServer
                 }
 
                 ServerFunctions.UpdateChats(_userName, phone, _phone, message);
-
-                //ChatController.AddMessage(_userName, message);    //HERE
                 return;
             }
+            if (data.Split(' ')[0] == "#UpdateChats")
+            {
+                string number = data.Split(' ')[1];
+                TempMessage obj = new TempMessage();
+                List<TempMessage> list = new List<TempMessage>();
+                try
+                {
+                    list = obj.GetTempMsgForUser(number);
+
+                    if (list.Count != 0)
+                        foreach (var V in list)
+                            for(int i = 0; i < V._msgList.Count(); i++)
+                                Send("#updatechat " + V._fromUser + " " + V._msgList[i].User + " " + V._msgList[i].Text);
+
+                    obj.DeleteTemp(ref number);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                return;
+            }
+            /*if (data.Split(' ')[0] == "#DeleteTemp")
+            {
+                string number = data.Split(' ')[0];
+                TempMessage obj = new TempMessage();
+                obj.DeleteTemp(ref number);
+            }*/
             if (data.Contains("#Registration"))
             {
                 Registration obj = new Registration();

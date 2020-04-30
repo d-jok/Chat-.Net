@@ -109,6 +109,7 @@ namespace chatClient
             if (_listOfUsers != null)
                 ChatListItemsShow();
 
+            send("#UpdateChats " + User.Phone);
             //Testing Zone
             /*string path = "..//..//ListOfChats//list.json";
             _fileCheck.FileExist(path);
@@ -253,39 +254,39 @@ namespace chatClient
 
         private void UpdateChat(string data)
         {
-            int number = 0;
-            int counter = 0;
-            int selected = ChatList.SelectedIndex;
-            string author = data.Split(' ')[2];
-            string message = "";
-            string phone = data.Split(' ')[1];
-            _checkNew = true;
-
-            for (int i = 0; i < data.Length; i++)
-            {
-                if (counter == 3)
-                    message += data[i];
-                else if (data[i] == ' ' && counter < 3)
-                    counter++;
-            }
-
-            counter = 0;    //Maybe I need it later!
-            foreach (var V in _listOfUsers)
-            {
-                if (V.Phone == phone)
-                {
-                    V.messages.Add(new Models.Message(data.Split(' ')[2], message));
-                    V.NewMsg = true;
-                    number = V.ListNumber;
-                    break;
-                }
-                counter++;
-            }
-                
-            Sort(counter);
-
             this.Invoke((MethodInvoker)delegate
             {
+                int number = 0;
+                int counter = 0;
+                int selected = ChatList.SelectedIndex;
+                string author = data.Split(' ')[2];
+                string message = "";
+                string phone = data.Split(' ')[1];
+                _checkNew = true;
+
+                for (int i = 0; i < data.Length; i++)
+                {
+                    if (counter == 3)
+                        message += data[i];
+                    else if (data[i] == ' ' && counter < 3)
+                        counter++;
+                }
+
+                counter = 0;    //Maybe I need it later!
+                foreach (var V in _listOfUsers)
+                {
+                    if (V.Phone == phone)
+                    {
+                        V.messages.Add(new Models.Message(data.Split(' ')[2], message));
+                        V.NewMsg = true;
+                        number = V.ListNumber;
+                        break;
+                    }
+                    counter++;
+                }
+                
+                Sort(counter);
+         
                 if (ChatList.SelectedIndex == number)
                     print(author + ": " + message);
                 else
@@ -582,6 +583,12 @@ namespace chatClient
             UserProfile profile = new UserProfile(User);
             profile.Owner = this;
             profile.Show();
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Save save = new Save();
+            save.SaveInFile(ref _listOfUsers, ref _fileOfChats);
         }
     }
 }

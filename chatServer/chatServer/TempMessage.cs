@@ -11,8 +11,8 @@ namespace chatServer
 {
     public class TempMessage
     {
-        private string _fromUser;
-        private List<Message> _msgList;
+        public string _fromUser;
+        public List<Message> _msgList;
 
         public TempMessage() { }
 
@@ -65,6 +65,7 @@ namespace chatServer
                         Console.WriteLine("GetMessages() Error:\n" + ex);
                     }
                 }
+                conn.Close();
             }
 
             return list;
@@ -84,6 +85,15 @@ namespace chatServer
             {
                 UpdateDB(ref _conLine, Id, ref array);
             }
+        }
+
+        public List<TempMessage> GetTempMsgForUser(string number)     //When user login
+        {
+            int Id = 0;
+            List<TempMessage> list = new List<TempMessage>();
+            list = GetMessages(number, ref Id);
+
+            return list;
         }
 
         public void AddNewMessage(ref string number, ref string from, ref string nick, ref string text)
@@ -128,6 +138,47 @@ namespace chatServer
             catch(Exception ex)
             {
                 Console.WriteLine(ex);
+            }
+        }
+
+        public void DeleteTemp(ref string number)
+        {
+            int Id = 0;
+            string sqlID = "SELECT ID FROM Users WHERE Phone = '" + number + "'";
+            string sqlDelete = "DELETE FROM MsgTemp WHERE UserID = ";
+            string _conLine = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(_conLine))
+            {
+                conn.Open();
+                using (SqlCommand check = new SqlCommand(sqlID, conn))
+                using (SqlDataReader reader = check.ExecuteReader())
+                {
+                    while (reader.Read())
+                        Id = (int)reader["ID"];
+
+                    sqlDelete += "'" + Id + "'";
+                }
+                conn.Close();
+
+                using (SqlCommand comm = new SqlCommand(sqlDelete, conn))
+                {
+                    conn.Open();
+
+                    try
+                    {
+                        comm.ExecuteNonQuery();
+                        Console.WriteLine("TEMP DELETED");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("ERROR: " + ex);
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                }
             }
         }
 
