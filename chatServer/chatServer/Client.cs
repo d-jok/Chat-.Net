@@ -100,12 +100,14 @@ namespace chatServer
                 {
                     list = obj.GetTempMsgForUser(number);
 
-                    if (list.Count != 0)
+                    if (list != null)
+                    {
                         foreach (var V in list)
-                            for(int i = 0; i < V._msgList.Count(); i++)
+                            for (int i = 0; i < V._msgList.Count(); i++)
                                 Send("#updatechat " + V._fromUser + " " + V._msgList[i].User + " " + V._msgList[i].Text);
 
-                    obj.DeleteTemp(ref number);
+                        obj.DeleteTemp(ref number);
+                    }
                 }
                 catch(Exception ex)
                 {
