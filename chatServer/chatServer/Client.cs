@@ -68,8 +68,6 @@ namespace chatServer
 
         private void handleCommand(string data, Client client, byte[] buffer)
         {
-            byte[] temp;
-
             if (data.Contains("#setname"))
             {
                 _userName = data.Split('&')[1];
@@ -131,7 +129,20 @@ namespace chatServer
             }
             if (data.Split(' ')[0] == "#Change")
             {
+                int counter = 0;
+                string temp = "";
+                ChangeUserInfo obj = new ChangeUserInfo();
 
+                for(int i = 0; i < data.Length; i++)
+                {
+                    if (counter == 3)
+                        temp += data[i];
+                    if (counter < 3 && data[i] == ' ')
+                        counter++;
+                }
+
+                temp = "#Answer " + obj.Change(data.Split(' ')[1], data.Split(' ')[2], temp);
+                Send(temp);
             }
 
             if (data.Split(' ')[0] == "#Backup")

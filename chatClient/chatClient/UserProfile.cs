@@ -39,37 +39,37 @@ namespace chatClient
             if (textName.Text != info.Name)
             {
                 request += textName.Text + " ";
-                fields += "Name";
+                fields += "Name/";
             }
             if (textSurname.Text != info.Surname)
             {
                 request += textSurname.Text + " ";
-                fields += "Surname";
+                fields += "Surname/";
             }
             if (textNick.Text != info.NickName)
             {
                 request += textNick.Text + " ";
-                fields += "NickName";
+                fields += "NickName/";
             }
             if (textEmail.Text != info.Email)
             {
                 request += textEmail.Text + " ";
-                fields += "Email";
+                fields += "Email/";
             }
             if (textPhone.Text != info.Phone)
             {
                 request += textPhone.Text + " ";
-                fields += "Phone";
+                fields += "Phone/";
             }
             if (textOldPassword.Text != "" && textNewPassword.Text != "")
             {
-                request += textOldPassword.Text + " " + textNewPassword.Text + " ";
-                fields += "Password";
+                request += textOldPassword.Text + "/" + textNewPassword.Text;
+                fields += "Password/";
             }
 
             if(request != "")
             {
-                string temp = "#Change " + fields + " ";
+                string temp = "#Change " + form.GetUserInfo.Phone + " " + fields + " ";
                 temp += request;
                 form.send(temp);
             }

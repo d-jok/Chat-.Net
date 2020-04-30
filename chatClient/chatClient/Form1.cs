@@ -183,6 +183,16 @@ namespace chatClient
                         for (int i = 8; i < data.Length; i++)
                             answer += data[i];
                         MessageBox.Show(answer);
+
+                        if(answer == "Info change success")
+                        {
+                            MessageBox.Show("Close this window and start this program again",
+                                "Information",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+
+                            Form1.ActiveForm.Close();
+                        }
                     }
 
                     if(data.Split(' ')[0] == "#GetBackup")
