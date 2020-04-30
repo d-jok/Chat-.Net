@@ -534,25 +534,28 @@ namespace chatClient
         {
             if (_checkNew == true)
             {
-                int selected = ChatList.SelectedIndex;
-                string text = ChatList.SelectedItem.ToString();
-                //MessageBox.Show("IN");
-
-                clearChat();
-
-                if (text.Contains('*'))
+                if (ChatList.SelectedIndex >= 0)
                 {
-                    _checkNew = false;
-                    _listOfUsers[ChatList.SelectedIndex].NewMsg = false;
-                    ChatListItemsShow();
-                    ChatList.SetSelected(selected, true);
-                }
+                    int selected = ChatList.SelectedIndex;
+                    string text = ChatList.SelectedItem.ToString();
+                    //MessageBox.Show("IN");
 
-                ChatName.Text = ChatList.SelectedItem.ToString() + " Chat";
+                    clearChat();
 
-                foreach (var V in _listOfUsers[ChatList.SelectedIndex].messages)
-                {
-                    print(V.User + ": " + V.Text);
+                    if (text.Contains('*'))
+                    {
+                        _checkNew = false;
+                        _listOfUsers[ChatList.SelectedIndex].NewMsg = false;
+                        ChatListItemsShow();
+                        ChatList.SetSelected(selected, true);
+                    }
+
+                    ChatName.Text = ChatList.SelectedItem.ToString() + " Chat";
+
+                    foreach (var V in _listOfUsers[ChatList.SelectedIndex].messages)
+                    {
+                        print(V.User + ": " + V.Text);
+                    }
                 }
             }
             _checkNew = true;
