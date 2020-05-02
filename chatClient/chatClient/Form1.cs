@@ -37,10 +37,11 @@ namespace chatClient
         private User.Info User; //CURENT user
         private FileCheck _fileCheck;
         public List<ListOfUsers> _listOfUsers;
+        public List<NewMsgList> _newMsgList;
         private bool _checkNew;
         private string _settingsPath;
-        private string _usersPath;
         private string _fileOfChats;
+        private string _fileOfNewMsg;
         public string ChatListShow;
 
         public Form1() { }
@@ -57,17 +58,19 @@ namespace chatClient
             _checkNew = true;
             _settingsPath = "..//..//Settings//Settings.json";
             _fileOfChats = "..//..//ListOfChats//ListOfChats.dat";
-            //_usersPath = "..//..//json//users";  //it was json.
+            _fileOfNewMsg = "..//..//ListOfChats//NewMsgList.dat";
             _serverSocket = socket;
 
             _fileCheck = new FileCheck();
             _listOfUsers = new List<ListOfUsers>();
+            _newMsgList = new List<NewMsgList>();
 
             connect();
 
             //File Control
             _fileCheck.FileExist(_settingsPath);
             _fileCheck.FileExist(_fileOfChats);
+            _fileCheck.FileExist(_fileOfNewMsg);
 
             if (new FileInfo(_settingsPath).Length != 0)
             {
@@ -108,6 +111,12 @@ namespace chatClient
             }
             if (_listOfUsers != null)
                 ChatListItemsShow();
+
+            if (new FileInfo(_fileOfNewMsg).Length != 0)
+            {
+                Load load = new Load();
+                load.LoadFromFile(ref _newMsgList, ref _fileOfNewMsg);
+            }
 
             send("#UpdateChats " + User.Phone);
             //Testing Zone
@@ -287,10 +296,29 @@ namespace chatClient
                 
                 Sort(counter);
          
-                if (ChatList.SelectedIndex == number)
+                if (ChatList.SelectedIndex == number && ChatList.SelectedIndex >= 0)
                     print(author + ": " + message);
                 else
                 {
+                    bool check = true;
+
+                    foreach(var V in _newMsgList)
+                    {
+                        if(V.number == phone)
+                        {
+                            Models.Message obj = new Models.Message(author, message);
+                            V.msgList.Add(obj);
+                            check = false;
+                        }
+                    }
+
+                    if(check == true)
+                    {
+                        List<Models.Message> msg = new List<Models.Message>();
+                        msg.Add(new Models.Message(author, message));
+                        _newMsgList.Add(new NewMsgList(phone, msg));
+                    }
+
                     this.ChatListItemsShow();
                     //_checkNew = false;
                     //ChatList.SetSelected(selected + 1, true);
@@ -544,8 +572,18 @@ namespace chatClient
 
                     if (text.Contains('*'))
                     {
+                        int pos = 0;
                         _checkNew = false;
+                        string phone = _listOfUsers[ChatList.SelectedIndex].Phone;
                         _listOfUsers[ChatList.SelectedIndex].NewMsg = false;
+
+                        for(int i = 0; i < _newMsgList.Count; i++)
+                        {
+                            if (_newMsgList[i].number == phone)
+                                pos = i;
+                        }
+                        _newMsgList.RemoveAt(pos);
+
                         ChatListItemsShow();
                         ChatList.SetSelected(selected, true);
                     }
@@ -567,31 +605,46 @@ namespace chatClient
             recognizer.Status = status;
         }
 
-        private void searchUserToolStripMenuItem_Click(object sender, EventArgs e)
+        public void OpenSearchWindow()
         {
             Search search = new Search();
             search.Owner = this;
             search.Show();
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        public void OpenSettingsWindow()
         {
             Settings settings = new Settings(_settingsPath);
             settings.Owner = this;
             settings.Show();
         }
-
-        private void myProfileToolStripMenuItem_Click(object sender, EventArgs e)
+        public void OpenMyProfileWindow()
         {
             UserProfile profile = new UserProfile(User);
             profile.Owner = this;
             profile.Show();
         }
 
+        private void searchUserToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenSearchWindow();
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenSettingsWindow();
+        }
+
+        private void myProfileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenMyProfileWindow();
+        }
+
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             Save save = new Save();
             save.SaveInFile(ref _listOfUsers, ref _fileOfChats);
+            save.SaveInFile(ref _newMsgList, ref _fileOfNewMsg);
         }
     }
 }

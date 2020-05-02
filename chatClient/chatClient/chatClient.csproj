@@ -147,6 +147,7 @@
     </Compile>
     <Compile Include="Models\ListOfUsers.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\NewMsgList.cs" />
     <Compile Include="Models\Setting.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Program.cs" />

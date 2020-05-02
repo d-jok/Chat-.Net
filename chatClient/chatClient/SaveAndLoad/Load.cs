@@ -30,6 +30,24 @@ namespace chatClient.SaveAndLoad
             }
         }
 
+        public void LoadFromFile(ref List<NewMsgList> list, ref string path)
+        {
+            FileStream fs = new FileStream(path, FileMode.Open);
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                list = (List<NewMsgList>)formatter.Deserialize(fs);
+            }
+            catch (SerializationException ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
+
         /*public void ChatBoxLoad(ref List<ChatBoxList> chatBox, ref string path)
         {
             FileStream fs = new FileStream(path, FileMode.Open);

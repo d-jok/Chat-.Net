@@ -29,6 +29,24 @@ namespace chatClient.SaveAndLoad
                 fs.Close();
             }
         }
+
+        public void SaveInFile(ref List<NewMsgList> newMsgList, ref string path)
+        {
+            FileStream fs = new FileStream(path, FileMode.Open);
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(fs, newMsgList);
+            }
+            catch (SerializationException ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
         
         /*public void ChatBoxSave(ref List<ChatBoxList> chatBox, ref string path)
         {

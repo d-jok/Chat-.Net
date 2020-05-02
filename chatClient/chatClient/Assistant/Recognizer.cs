@@ -24,23 +24,34 @@ namespace chatClient.Assistant
             _name = "еви";
             form1 = obj;
 
-            System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("ru-RU");
-            sre = new SpeechRecognitionEngine();
-            sre.SetInputToDefaultAudioDevice();//microfone
+            try
+            {
+                System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("ru-RU");
+                sre = new SpeechRecognitionEngine();
+                sre.SetInputToDefaultAudioDevice();//microfone
 
-            sre.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(SpeechRecognized);
+                sre.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(SpeechRecognized);
 
-            Choices numbers = new Choices();
-            numbers = CreateGramar();
+                Choices numbers = new Choices();
+                numbers = CreateGramar();
 
-            gb = new GrammarBuilder();
-            gb.Culture = ci;
-            gb.Append(numbers);
-            sre.UnloadAllGrammars();
-            Grammar g = new Grammar(gb);
-            sre.LoadGrammar(g);//загружаем "грамматику"
+                gb = new GrammarBuilder();
+                gb.Culture = ci;
+                gb.Append(numbers);
+                sre.UnloadAllGrammars();
+                Grammar g = new Grammar(gb);
+                sre.LoadGrammar(g);//загружаем "грамматику"
 
-            sre.RecognizeAsync(RecognizeMode.Multiple);           
+                sre.RecognizeAsync(RecognizeMode.Multiple);
+            }
+            catch
+            {
+                MessageBox.Show("Voice assinstant components not installed",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                Status = false;
+            }
         }
 
         private Choices CreateGramar()
@@ -50,9 +61,26 @@ namespace chatClient.Assistant
                 _name + " есть новые сообщения",
                 _name + " назови случайное число",
                 _name + " который час",
-                _name + " ты молодец"});
+                _name + " ты молодец",
+                _name + " открой окно поиска",
+                _name + " открой окно настроек",
+                _name + " открой мой профиль",
+                _name + " прочитай новые сообщения"});
 
             return ch;
+        }
+
+        private void GetNewMsg(ref List<string> list)
+        {
+            foreach(var V in form1._newMsgList)
+            {
+                list.Add("Зачитываю сообщения от " + V.msgList[0].User);
+                foreach(var F in V.msgList)
+                {
+                    list.Add(F.Text + "   ");
+                }
+                list.Add("     ");
+            }
         }
 
         private void CheckNewMsg()
@@ -121,6 +149,17 @@ namespace chatClient.Assistant
                         CheckNewMsg();
                         return;
                     }
+                    else if (e.Result.Text == _name + " прочитай новые сообщения")
+                    {
+                        List<string> list = new List<string>();
+                        GetNewMsg(ref list);
+
+                        if(list.Count != 0)
+                            foreach (var V in list)
+                                speaker.Speak(V);
+
+                        return;
+                    }
                     else if (e.Result.Text == _name + " который час")
                     {
                         speaker.Speak(SayTime());
@@ -129,6 +168,21 @@ namespace chatClient.Assistant
                     else if (e.Result.Text == _name + " ты молодец")
                     {
                         speaker.Speak("спасибо");
+                        return;
+                    }
+                    else if (e.Result.Text == _name + " открой окно поиска")
+                    {
+                        form1.OpenSearchWindow();
+                        return;
+                    }
+                    else if (e.Result.Text == _name + " открой окно настроек")
+                    {
+                        form1.OpenSettingsWindow();
+                        return;
+                    }
+                    else if (e.Result.Text == _name + " открой мой профиль")
+                    {
+                        form1.OpenMyProfileWindow();
                         return;
                     }
                 }
