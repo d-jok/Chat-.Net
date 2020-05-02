@@ -1,0 +1,4 @@
+Порядок установки:
+1) SpeechPlatformRuntime.msi
+2) MicrosoftSpeechPlatformSDK.msi
+3) MSSpeech_SR_ru-RU-TELE.msi
